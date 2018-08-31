@@ -1,0 +1,18 @@
+#JSGF V1.0 ISO8859-1 en;
+
+
+
+grammar com.test.bamremove;
+
+
+
+
+
+public <top> = remove from bam <wildcard> {this.bam = this.wc; this.out = this.bam - ".bam"; this.out = this.out + ".bl.bam"; this.package = "bedools"; this.command = "bedtools intersect -v -abam ";} sample <wildcard> {this.sample = this.wc} folder <wildcard> {this.folder = this.wc} blacklist <wildcard> {this.bl = this.wc}  subdir <wildcard> {this.sub = this.wc; this.out = this.folder + "/" + this.sub + "/" + this.sample + ".bl.bam"; this.command = this.command + this.bam + " -b " + this.bl + " > " + this.out}
+	  ;
+
+
+	 
+
+<wildcard> = % {this.wc = $}
+	   ;

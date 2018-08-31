@@ -1,0 +1,22 @@
+#JSGF V1.0 ISO8859-1 en;
+
+
+
+grammar com.test.index;
+
+
+
+import <com.test.digits.*>
+
+
+public <top> = <do> 
+     	    ;
+
+
+<do> =  from bigwig to wig {this.packages = "ucsc-utilities"; this.command = " bigWigToWig "} <wildcard> {this.in = this.wc; this.out = this.in; this.out = this.out - ".bw"; this.out = this.out + ".wig"; this.command = this.command + this.in + " " + this.out}
+	  ;
+
+	 
+
+<wildcard> = % {this.wc = $}
+	   ;

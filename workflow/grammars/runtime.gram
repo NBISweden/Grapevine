@@ -1,0 +1,33 @@
+#JSGF V1.0 ISO8859-1 en;
+
+
+
+grammar com.test.runtime;
+
+
+
+
+
+public <top> = request runtime <ask> {this.command = "#SBATCH -t " + this.time}
+	  ;
+
+<ask> = <wildcard> hours {this.time = this.wc + ":00:00"}
+      | <minutes> minutes {this.time = "0:" + this.wc + ":00"}
+      | <wildcard>  {this.time = this.wc + ":00"}
+      | <wildcard> hours {this.time = this.wc + ":"} <minutes> minutes {this.time = this.time + this.wc + ":00"}
+      ;
+
+<minutes> = 1 {this.wc = "01"} 
+	  | 2 {this.wc = "02"} 
+	  | 3 {this.wc = "03"} 
+	  | 4 {this.wc = "04"} 
+	  | 5 {this.wc = "05"} 
+	  | 6 {this.wc = "06"} 
+	  | 7 {this.wc = "07"} 
+	  | 8 {this.wc = "08"} 
+	  | 9 {this.wc = "09"} 
+	  | % {this.wc = $}
+	  ;
+
+<wildcard> = % {this.wc = $}
+	   ;

@@ -1,0 +1,31 @@
+#JSGF V1.0 ISO8859-1 en;
+
+
+
+grammar com.test.mult;
+
+
+
+import <com.test.digits.*>
+
+
+public <top> = <do> 
+     	    ;
+
+
+<do> =  write to file <wc> {this.package = "Minute-ChIP"; this.outraw = this.wc} folder <wc> {this.folder = this.wc} samples <eveneven> {this.out = this.folder + "/stats/" + this.base + this.outraw; this.command = "MakeList -o " + this.out + " "; this.command = this.command + this.in}
+	  ;	
+
+<two> = <w> | <w> <w> ;
+
+<more> = <two> | <two> <two> | <two> <two> <two> | <two> <two> <two> <two> ;
+
+<evenmore> = <more> | <more> <more> | <more> <more> <more> | <more> <more> <more> <more> ;
+
+<eveneven> = <evenmore> | <evenmore> <evenmore>  ;
+
+<w> = % {this.wc = $; this.in = this.in + " " + this.folder + "/stats/" + this.wc}
+	   ;
+
+<wc> = % {this.wc = $}
+	   ;

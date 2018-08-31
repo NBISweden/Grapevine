@@ -1,0 +1,19 @@
+#JSGF V1.0 ISO8859-1 en;
+
+
+
+grammar com.test.bigwig;
+
+
+
+
+
+public <top> = make bigwig {this.package = "deepTools"; this.command = "bamCoverage -b ";} folder <wildcard> {this.folder = this.wc} from <wildcard> {this.bam = this.wc;} out <wildcard> {this.out = this.wc} subdir <wildcard> {this.sub = this.wc; this.out = this.folder + "/" + this.sub + "/" + this.out;} scale <wildcard> {this.scale = this.wc; this.command = this.command + this.bam + " -o " + this.out + ".bw" + " --scaleFactor " + this.scale + " --extendReads ";}
+       | make bigwig {this.package = "deepTools"; this.command = "bamCoverage -b ";} from <wildcard> {this.bam = this.wc;this.out = this.bam; this.out = this.out - ".bam"; this.out = this.out + ".bw"} subdir <wildcard> {this.sub = this.wc;} scale <wildcard> {this.scale = this.wc; this.command = this.command + this.bam + " -o " + this.out  + " --scaleFactor " + this.scale + " --extendReads ";}
+	  ;
+
+
+	 
+
+<wildcard> = % {this.wc = $}
+	   ;

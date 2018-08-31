@@ -1,0 +1,20 @@
+#JSGF V1.0 ISO8859-1 en;
+
+
+
+grammar com.test.markdups;
+
+
+
+import <com.test.digits.*>
+
+
+
+public <top> = <cmd> {this.package = "picard"; this.command = "java -jar $PICARD_HOME/picard.jar CollectInsertSizeMetrics I=" + this.in + " O=" + this.out1 + " H=" + this.out1 + ".pdf" + " \nGetInsertSize -i " + this.out1 + " > " + this.size}
+     	    ;
+
+<cmd> = insert size <wildcard> {this.in = this.wc; this.out1 = this.in - ".bam"; this.size = this.out1 + ".inserts"; this.out1 = this.out1 + ".insertmetrics"; }
+      	;
+
+<wildcard> = % {this.wc = $}
+	   ;
