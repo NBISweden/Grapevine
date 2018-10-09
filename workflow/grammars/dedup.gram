@@ -10,7 +10,7 @@ import <com.test.digits.*>
 
 
 
-public <top> = <dedup> {this.package = "Minute-ChIP"; this.mispair = "4"} <folder> <name> <sample> {this.out1 = this.filebase + "_" + this.R1base; this.out2 = this.filebase + "_" + this.R2base; this.command = this.command + " -i1 " + this.filebase + "_" + this.sample + this.R1ex + " -i2 " + this.filebase + "_" + this.sample + this.R2ex + " -o1 " + this.folder + this.R1base + " -o2 " + this.folder + this.R2base + " -d2 " + this.mispair; this.out1 = this.folder + this.R1base; this.out2 = this.folder + this.R2base;}
+public <top> = <dedup> {this.package = "Minute-ChIP"; this.mispair = "4"} <folder> <name> <sample> {this.out1 = this.filebase + "_" + this.R1base; this.out2 = this.filebase + "_" + this.R2base; this.command = this.command + " -i1 " + this.filebase + "_" + this.sample + this.R1ex + " -i2 " + this.filebase + "_" + this.sample + this.R2ex + " -o1 " + this.folder + this.R1base + " -o2 " + this.folder + this.R2base + " -d2 " + this.mispair; this.out1 = this.folder + this.R1base + ".gz"; this.out2 = this.folder + this.R2base + ".gz";}
 
        | <dedup> {this.package = "Minute-ChIP"; this.mispair = "4"} <folder> <name> <file1> <file2> <sample> {this.out1 = this.filebase + "_" + this.R1base; this.out2 = this.filebase + "_" + this.R2base; this.command = this.command + " -i1 " + this.R1 + " -i2 " + this.R2 + " -o1 " + this.folder + this.R1base + " -o2 " + this.folder + this.R2base + " -d2 " + this.mispair; this.out1 = this.folder + this.R1base; this.out2 = this.folder + this.R2base;}
      
@@ -27,7 +27,7 @@ public <top> = <dedup> {this.package = "Minute-ChIP"; this.mispair = "4"} <folde
 	   | partner <t_digit> {this.mispair = this.result; this.result = ""}
  	   ;
 	   
-<sample> = sample <wildcard> {this.sample = this.wc; this.R1base = this.sample + "_R1.dedup.fastq"; this.R2base = this.sample + "_R2.dedup.fastq"}
+<sample> = sample <wildcard> {this.sample = this.wc; this.R1base = this.sample + "_R1.dedup.fastq.gz"; this.R2base = this.sample + "_R2.dedup.fastq.gz"}
 	  ;
 
 <name> = fastq <wildcard> {this.filebase = this.wc}
