@@ -158,10 +158,21 @@ int main( int argc, char** argv )
 
   
   svec<string> script;
+
+  int nErrors = 0;
   
   for (j=0; j<p.GetCount(); j++) {
     p.Process(j);
 
+    if (p.GetErrors().isize() == 0) {
+      cout << "Parser SUCCESSFUL!" << endl;
+    } else {
+      cout << "There were " << p.GetErrors().isize() << " ERRORS!" << endl;
+      for (i=0; i<p.GetErrors().isize(); i++) {
+	cout << p.GetErrors()[i] << endl;
+	nErrors++;
+      }
+    }
 
     string name = outName;
     if (p.GetCount() > 1) {
@@ -193,6 +204,9 @@ int main( int argc, char** argv )
       if (logDir != "") {
 	wrap = Wrap(wrap.c_str(), logFile, pipe);
       }
+      //if (i==0 && wrap != "#!/bin/bash -l")
+      //fprintf(pOut, "#!/bin/bash -l\n\n", wrap.c_str());
+
       fprintf(pOut, "%s\n", wrap.c_str());
       //fprintf(stdout, "CHECK  %s\n", wrap.c_str());
       //cout << "FINAL " << p[i] << endl;
@@ -263,5 +277,7 @@ int main( int argc, char** argv )
   }
   cout << "============= REQUIRED SOFTWARE PACKAGES ==============" << endl;
   fclose(package);
+
+  
   return 0;
 }

@@ -1,0 +1,5 @@
+sample	file	condition
+one	a.file	clean
+two	b.file	clean
+three	c.file	dirty
+

@@ -1,0 +1,9 @@
+#!/bin/bash -l
+
+#SBATCH -A b2017181
+#SBATCH -p core
+#SBATCH -n 4
+#SBATCH -t 10:00:00
+
+export PATH=/home/manfredg/Software/InSeqt/bin/:$PATH
+export PATH=/home/manfredg/Software/NBIS-UtilityCode/:$PATH

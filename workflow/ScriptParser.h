@@ -218,8 +218,12 @@ class ScriptParser
 
   const svec<SoftwarePackage> & GetPackages() const {return m_packages;}
 
+  const svec<string> & GetErrors() const {return m_errors;}
   
  private:
+  void AddError(const string & e) {
+    m_errors.push_back(e);    
+  }
 
   void CollapseTable(const string & key) {
     m_table.Collapse(key);
@@ -227,23 +231,37 @@ class ScriptParser
   
   int AddVariable(const string & s) {
     int i;
+
+     
     for (i=0; i<m_vars.isize(); i++) {
       if (m_vars[i].Name() == s)
 	return i;
     }
+    //cout << "DEBUG (1) ADD " << s << endl;
     Variable tmp;
     tmp.Name() = s;
+
+    StringParser p;
+    p.SetLine(s, ".");
+    if (p.AsString(0) == "@table") {
+      tmp.Value() = "[UNDEFINED]";
+    }
+
+    
     m_vars.push_back(tmp);
     return m_vars.isize()-1;
   }
 
   int GetVariable(const string & s) {
     int i;
+    //cout << "DEBUG (1) " << s << endl;
     for (i=0; i<m_vars.isize(); i++) {
-      if (m_vars[i].Name() == s)
+      if (m_vars[i].Name() == s) {
+	//cout << "FOUND (1) " << endl;	
 	return i;
+      }
     }    
-    
+    AddError("Variable not found: " + s);
     return -1;
   }
 
@@ -272,6 +290,7 @@ class ScriptParser
 
   svec<SoftwarePackage> m_packages;
   svec<AutoRemoveItem> m_autoremove;
+  svec<string> m_errors;
 };
 
 

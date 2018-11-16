@@ -1,0 +1,5 @@
+sample	folder	file	condition
+one	examples	a.file	clean
+two	examples	b.file	clean
+three	examples	c.file	dirty
+

@@ -202,6 +202,7 @@ void Table::Collapse(const string & keyraw)
   }
   if (index == -1) {
     cout << "ERROR Collapse(): column not found in table: " << key << endl;
+    //AddError("ERROR Collapse(): column not found in table: " + key);
     return;
   }
   
@@ -260,6 +261,7 @@ bool Table::Get(string &ret, const string & label, int index) const
 
   if (s.GetItemCount() != 2) {
     cout << "ERROR: invalid syntax: " << label << endl;
+    //AddError("ERROR: invalid syntax: " + label);
     return false;
   }
   
@@ -271,7 +273,8 @@ bool Table::Get(string &ret, const string & label, int index) const
       }
     }
   }
-  cout << "ERROR: table entry not found: " << label << endl; 
+  cout << "ERROR: table entry not found: " << label << endl;
+  //AddError("ERROR: table entry not found: " + label);
   return false;
 }
 
@@ -407,6 +410,7 @@ int ScriptParser::Read(const string & fileName, bool bSilent)
 		tmp.SetBG(true);
 	      } else {
 		cout << "ERROR line " << m_commands.isize() << ": " << " unrecognized token " << s1 << endl;
+		AddError("ERROR line " + Stringify(m_commands.isize()) + ": unrecognized token " + s1);
 		return -1;
 	      }
 	    }
@@ -454,6 +458,7 @@ void ScriptParser::UnwrapLoops()
       } else {
 	if (pp.AsString(1)[0] != '@') {
 	  cout << "ERROR: wrong loop syntax in " << m_commands[i].Raw()<< endl;
+	  AddError("ERROR: wrong loop syntax in " + m_commands[i].Raw());
 	} else {
 	  n = pp.GetItemCount() - 4;
 	  extra.clear();
@@ -528,10 +533,13 @@ void ScriptParser::AddTableVars(int index)
   for (i=0; i<m_table.isize(); i++) {
     string v = m_table.Name() + "." + m_table[i].Label();
     int idx = AddVariable(v);
-    if (index >=0 && index < m_table[i].isize())
+    if (index >=0 && index < m_table[i].isize()) {
       m_vars[idx].Value() = (m_table[i])[index];
-    else
+    } else {
       cout << "ERROR: index " << index << " exceeds table size " << m_table[i].isize() << endl;
+      AddError("ERROR: index " + Stringify(index) + " exceeds table size: " + Stringify(m_table[i].isize()));
+    }
+    
   }
 }
 
@@ -548,6 +556,7 @@ bool ScriptParser::VariableAssign(const Command & c)
   int left = GetVariable(c.Valid()[0]);
   if (left < 0) {
     cout << "ERROR (0): variable " << c.Valid()[0] << " is undefined!!" << endl;
+    AddError("ERROR (0): variable " + c.Valid()[0] + " is undefined!!");
     return false;
   }
 
@@ -560,7 +569,16 @@ bool ScriptParser::VariableAssign(const Command & c)
 
     if (c.Valid()[i] == "+")
       continue;
-    int right = GetVariable(c.Valid()[i]);
+    int right = -1;
+
+    //cout << "DEBUG " << c.Valid()[i] << endl;
+    
+    if ((c.Valid()[i])[0] == '@') {
+      right = GetVariable(c.Valid()[i]);
+      //cout << "DEBUG " << right << endl;
+      if (right == -1)
+	throw;
+    }
     string val = c.Valid()[i];
     //cout << "DEBUG variable assign " <<  c.Valid()[0] << " " << c.Valid()[i] << endl;
     if (right >= 0) {
@@ -651,7 +669,8 @@ bool ScriptParser::ProcessConditions(int index)
     cout << "Condition ENTER!!" << endl;
     
     if (pp.AsString(2) != "==" && pp.AsString(2) != "!=") {
-      cout << "ERROR: malformed >if statement in line " << i << ": " << c.Raw() << endl;      
+      cout << "ERROR: malformed >if statement in line " << i << ": " << c.Raw() << endl;
+      AddError("ERROR: malformed >if statement in line " + Stringify(i) + ": " + c.Raw());
     }
     
     int idx = GetVariable(pp.AsString(1));
@@ -659,7 +678,8 @@ bool ScriptParser::ProcessConditions(int index)
     string val;
     if (idx < 0) {
       cout << "WARNING: variable " << pp.AsString(1) << " undefined in line " << i << ": " << c.Raw() << endl;
-      cout << "WARNING: assuming FALSE condition!" << endl;      
+      cout << "WARNING: assuming FALSE condition!" << endl;
+      AddError("WARNING: variable " + pp.AsString(1) + " undefined in line " + Stringify(i) + ": " + c.Raw());
       continue;
     } else {
       val = m_vars[idx].Value();
@@ -670,6 +690,7 @@ bool ScriptParser::ProcessConditions(int index)
       int idx2 = GetVariable(cmp);
       if (idx2 < 0) {
 	cout << "ERROR (1): variable " << cmp << " undefined in line " << i << ": " << c.Raw() << endl;
+	AddError("ERROR (1): variable " + cmp + " undefined in line " + Stringify(i) + ": " + c.Raw());
 	continue;
       }
       cmp = m_vars[idx2].Value();
@@ -698,6 +719,8 @@ bool ScriptParser::Process(int index)
   int i, j;
   RemoveAliens();
   ResetAutoRemeove();
+
+  m_errors.clear();
   
   AddTableVars(index);
   
@@ -725,6 +748,7 @@ bool ScriptParser::Process(int index)
 	int index2 = GetVariable(el);
 	if (index2 < 0) {
 	  cout << "ERROR line " << i << ": variable " << el << " is undefined!!" << endl;
+	  AddError("ERROR line " + Stringify(i) + ": variable " + el + " is undefined!!");
 	  return false;
 	}
 	el = m_vars[index2].Value();

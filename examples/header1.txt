@@ -1,0 +1,4 @@
+@table = examples/table1b.txt
+
+@table.folder = somewhere
+
