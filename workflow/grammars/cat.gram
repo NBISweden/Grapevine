@@ -1,0 +1,31 @@
+#JSGF V1.0 ISO8859-1 en;
+
+
+
+grammar com.test.mult;
+
+
+
+import <com.test.digits.*>
+
+
+public <top> = <do> 
+     	    ;
+
+
+<do> =  concatenate to <wc> {this.out = this.wc}  <eveneven> {this.command = "cat " + this.in + " > " + this.out}
+	  ;	
+
+<two> = <w> | <w> <w> ;
+
+<more> = <two> | <two> <two> | <two> <two> <two> | <two> <two> <two> <two> ;
+
+<evenmore> = <more> | <more> <more> | <more> <more> <more> | <more> <more> <more> <more> ;
+
+<eveneven> = <evenmore> | <evenmore> <evenmore>  ;
+
+<w> = % {this.wc = $; this.in = this.in + " " + this.wc}
+    ;
+
+<wc> = % {this.wc = $}
+	   ;
