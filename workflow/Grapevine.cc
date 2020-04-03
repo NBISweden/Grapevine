@@ -33,12 +33,13 @@ void WrapSingle(string & line, const string & log, const string & pipe)
     return;
   if (pp.AsString(0) == "wait")
     return;
- 
+
+  /*
   if (pp.AsString(0) == "EditTable") {
     string send = "echo \"" + line + "\" >> " + pipe;
     line = send;
     return;
-  }
+    }*/
   
   if (pp.AsString(0) == ">local") {
     string send = "echo \"";
@@ -244,6 +245,8 @@ int main( int argc, char** argv )
     fprintf(pQ, "qsub %s\n", script[i].c_str());
     fprintf(pA, "%s > log%d.out &\n", script[i].c_str(), i);
     fprintf(pA, "sleep 1\n");
+    if ((i+1) % 6 == 0)
+      fprintf(pA, "wait\n");
   }
   
   fprintf(pA, "wait\n");

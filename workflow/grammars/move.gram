@@ -10,7 +10,8 @@ grammar com.test.move;
 
 public <top> = move <source> to [<base>] <dest> {this.final = this.base + this.dest; this.command = "mv " + this.source + " " + this.final;}
        	     | move <source> index {this.source = this.source + ".bai";} to [<base>] <dest> {this.final = this.base + this.dest; this.command = "mv " + this.source + " " + this.final;}
-     	    ;
+	     | copy <source> to [<base>] <dest2> {this.final = this.base + "/" + this.dest; this.command = "cp " + this.source + " " + this.final;}
+	     ;
 
 <source> = <wildcard> {this.source = this.wc}
 	 ;
@@ -18,7 +19,10 @@ public <top> = move <source> to [<base>] <dest> {this.final = this.base + this.d
 <base> = <wildcard> {this.base = this.wc + "/"}
 	 ;
 
-<dest> = <wildcard> {this.dest = this.wc + "/."}
+<dest> = <wildcard> {this.dest = this.wc + "./"}
+	 ;
+
+<dest2> = <wildcard> {this.dest = this.wc}
 	 ;
 
 <wildcard> = % {this.wc = $}
